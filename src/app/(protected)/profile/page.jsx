@@ -3,15 +3,39 @@
 import ProfileSkeleton from "@/components/atoms/profileSkeleton";
 import UserAvatar from "@/components/atoms/userAvatar";
 import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
+import { Spinner } from "@/components/ui/spinner";
 import { Google } from "@/constants/icons/google";
+import { auth } from "@/db/firebase/client";
 import useGetProfile from "@/hooks/auth/useGetProfile";
 import useDOCStore from "@/store";
 import { format } from "date-fns";
-import { Calendar, Fingerprint, Mail, User, VerifiedIcon } from "lucide-react";
+import { signOut } from "firebase/auth";
+import {
+    Calendar,
+    Fingerprint,
+    LogOut,
+    Mail,
+    User,
+    VerifiedIcon,
+} from "lucide-react";
 
 const ProfilePage = () => {
-    const { user } = useDOCStore();
+    const { user, logout, loading, setLoading } = useDOCStore();
     const { data: profile, isLoading, isFetching } = useGetProfile(user?.uid);
+
+    const handleLogout = async () => {
+        if (loading) return;
+        setLoading(true);
+        try {
+            await signOut(auth);
+            logout();
+        } catch (error) {
+            console.error(error);
+        } finally {
+            setLoading(false);
+        }
+    };
 
     if (isLoading || isFetching) {
         return <ProfileSkeleton />;
@@ -51,7 +75,7 @@ const ProfilePage = () => {
                     </div>
                 </div>
             </div>
-            <div className="relative bg-white/50 backdrop-blur-sm rounded-b-md flex flex-1 gap-4 p-6 w-full flex-col">
+            <div className="relative bg-white/50 backdrop-blur-sm flex flex-1 gap-4 p-6 w-full flex-col">
                 <span className="inline-flex items-center gap-2 text-sm font-medium">
                     <User className="size-4!" /> Personal Information
                 </span>
@@ -82,6 +106,27 @@ const ProfilePage = () => {
                         );
                     })}
                 </div>
+            </div>
+            <div className="w-full bg-white/50 backdrop-blur-sm rounded-b-md p-6">
+                <Button
+                    size="lg"
+                    variant="destructive"
+                    disabled={loading}
+                    onClick={handleLogout}
+                    className={"rounded-md! gap-2 w-full cursor-pointer"}
+                >
+                    {loading ? (
+                        <>
+                            Logging Out
+                            <Spinner />
+                        </>
+                    ) : (
+                        <>
+                            Log Out
+                            <LogOut />
+                        </>
+                    )}
+                </Button>
             </div>
         </div>
     );
