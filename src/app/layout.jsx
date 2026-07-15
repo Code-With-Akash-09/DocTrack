@@ -1,4 +1,8 @@
+import { Toaster } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
+import AuthProvider from "@/providers/authProvider";
+import QueryClientProvider from "@/providers/queryClient";
+import { ThemeProvider } from "@/providers/themeProvider";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 
@@ -22,9 +26,25 @@ export default function RootLayout({ children }) {
         <html
             lang="en"
             className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}
+            suppressHydrationWarning
         >
-            <body className="min-h-full flex flex-col">
-                <TooltipProvider>{children}</TooltipProvider>
+            <body className="flex h-full w-full bg-neutral-50 dark:bg-neutral-900 overflow-hidden">
+                <QueryClientProvider>
+                    <TooltipProvider>
+                        <ThemeProvider
+                            attribute="class"
+                            defaultTheme="light"
+                            enableSystem
+                            disableTransitionOnChange
+                            suppressHydrationWarning
+                        >
+                            <AuthProvider>
+                                {children}
+                                <Toaster richColors />
+                            </AuthProvider>
+                        </ThemeProvider>
+                    </TooltipProvider>
+                </QueryClientProvider>
             </body>
         </html>
     );

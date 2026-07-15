@@ -32,10 +32,6 @@ const useDOCStore = create(
         }),
         {
             name: "useDOCStore",
-            maxAge: 30,
-            stateSanitizer: devtoolsStateSanitizer,
-            actionSanitizer: devtoolsActionSanitizer,
-            actionsDenylist: ["setCurrentTime", "setAudioRef"],
             enabled:
                 (typeof window !== "undefined" &&
                     Boolean(window["__REDUX_DEVTOOLS_EXTENSION_COMPOSE__"])) ||

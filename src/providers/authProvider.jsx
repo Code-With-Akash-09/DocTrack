@@ -1,13 +1,13 @@
 "use client";
 
-import { login } from "@/actions/db/auth";
+import { login } from "@/actions/auth";
 import { auth } from "@/db/firebase/client";
-import useSonivraStore from "@/store";
+import useDOCStore from "@/store";
 import { onAuthStateChanged } from "firebase/auth";
 import { useEffect } from "react";
 
 export default function AuthProvider({ children }) {
-    const { setUser, setLoading } = useSonivraStore();
+    const { setUser, setLoading } = useDOCStore();
 
     useEffect(() => {
         const unsubscribe = onAuthStateChanged(auth, async (firebaseUser) => {
