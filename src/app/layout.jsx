@@ -34,7 +34,7 @@ export default function RootLayout({ children }) {
             className={`${inter.variable} ${geistSans.variable} ${geistMono.variable} font-inter h-dvh w-full antialiased overflow-hidden`}
             suppressHydrationWarning
         >
-            <body className="flex h-full w-full bg-neutral-50 py-4 max-w-md mx-auto dark:bg-neutral-900 overflow-hidden">
+            <body className="flex h-full w-full bg-neutral-50 md:py-4 max-w-md mx-auto dark:bg-neutral-900 overflow-hidden">
                 <QueryClientProvider>
                     <TooltipProvider>
                         <ThemeProvider

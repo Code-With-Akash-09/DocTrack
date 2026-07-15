@@ -9,7 +9,7 @@ const NavigationPanel = ({ children }) => {
         <div className="flex min-h-0 w-full flex-1 flex-col md:rounded-md">
             <div className="flex w-full shrink-0 h-16 bg-linear-to-r from-emerald-700 to-teal-800 md:rounded-t-md px-4 py-2">
                 <div className="flex h-full items-center w-full gap-1">
-                    <Logo height={40} width={40} />
+                    <Logo height={40} width={40} className={"size-10"} />
                     <span className="flex flex-col w-fit text-white">
                         <span className="font-bold text-lg leading-none">
                             Doctor Visit
@@ -18,7 +18,7 @@ const NavigationPanel = ({ children }) => {
                     </span>
                 </div>
             </div>
-            <div className="min-h-0 flex-1 w-full bg-neutral-50">
+            <div className="min-h-0 flex-1 w-full bg-neutral-50 dark:bg-neutral-900 overflow-y-auto">
                 {children}
             </div>
             <div
