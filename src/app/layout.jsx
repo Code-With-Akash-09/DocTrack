@@ -1,10 +1,16 @@
+import LoginModal from "@/components/molecules/loginModel";
 import { Toaster } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import AuthProvider from "@/providers/authProvider";
 import QueryClientProvider from "@/providers/queryClient";
 import { ThemeProvider } from "@/providers/themeProvider";
-import { Geist, Geist_Mono } from "next/font/google";
+import { Geist, Geist_Mono, Inter } from "next/font/google";
 import "./globals.css";
+
+const inter = Inter({
+    variable: "--font-inter",
+    subsets: ["latin"],
+});
 
 const geistSans = Geist({
     variable: "--font-geist-sans",
@@ -25,10 +31,10 @@ export default function RootLayout({ children }) {
     return (
         <html
             lang="en"
-            className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}
+            className={`${inter.variable} ${geistSans.variable} ${geistMono.variable} font-inter h-dvh w-full antialiased overflow-hidden`}
             suppressHydrationWarning
         >
-            <body className="flex h-full w-full bg-neutral-50 dark:bg-neutral-900 overflow-hidden">
+            <body className="flex h-full w-full bg-neutral-50 p-4 max-w-md mx-auto dark:bg-neutral-900 overflow-hidden">
                 <QueryClientProvider>
                     <TooltipProvider>
                         <ThemeProvider
@@ -39,7 +45,10 @@ export default function RootLayout({ children }) {
                             suppressHydrationWarning
                         >
                             <AuthProvider>
-                                {children}
+                                <main className="flex-1 w-full md:border md:border-neutral-400 md:rounded-md">
+                                    {children}
+                                </main>
+                                <LoginModal />
                                 <Toaster richColors />
                             </AuthProvider>
                         </ThemeProvider>
