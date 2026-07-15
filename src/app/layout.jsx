@@ -34,7 +34,7 @@ export default function RootLayout({ children }) {
             className={`${inter.variable} ${geistSans.variable} ${geistMono.variable} font-inter h-dvh w-full antialiased overflow-hidden`}
             suppressHydrationWarning
         >
-            <body className="flex h-full w-full bg-neutral-50 p-4 max-w-md mx-auto dark:bg-neutral-900 overflow-hidden">
+            <body className="flex h-full w-full bg-neutral-50 py-4 max-w-md mx-auto dark:bg-neutral-900 overflow-hidden">
                 <QueryClientProvider>
                     <TooltipProvider>
                         <ThemeProvider
@@ -45,7 +45,7 @@ export default function RootLayout({ children }) {
                             suppressHydrationWarning
                         >
                             <AuthProvider>
-                                <main className="flex-1 w-full md:border md:border-neutral-400 md:rounded-md">
+                                <main className="flex h-full w-full md:border md:border-neutral-200 md:rounded-md">
                                     {children}
                                 </main>
                                 <LoginModal />
