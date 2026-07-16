@@ -1,4 +1,5 @@
 import { clsx } from "clsx";
+import { format, parse } from "date-fns";
 import { twMerge } from "tailwind-merge";
 
 export function cn(...inputs) {
@@ -13,3 +14,10 @@ export function getGoogleProfileImage(url, size = 512) {
 
     return url.replace(/=s\d+-c$/, `=s${size}-c`);
 }
+
+export const formatTimeRange = (startTime, endTime) => {
+    const start = parse(startTime, "HH:mm", new Date());
+    const end = parse(endTime, "HH:mm", new Date());
+
+    return `${format(start, "h:mm a")} - ${format(end, "h:mm a")}`;
+};
