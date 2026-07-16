@@ -7,11 +7,11 @@ import {
     AlarmClock,
     Calendar,
     ChevronRight,
-    Plus,
     Stethoscope,
     User,
 } from "lucide-react";
 import Link from "next/link";
+import VisitLogForm from "./visitLogForm";
 
 const DoctorCard = ({ card }) => {
     const Icon = SPECIALITY_ICONS[card.speciality[0]] ?? Stethoscope;
@@ -39,7 +39,9 @@ const DoctorCard = ({ card }) => {
                     </div>
                 </div>
                 <div className="flex w-14 shrink-0 flex-col items-center justify-center gap-0.5">
-                    <span className="">2 / 3</span>
+                    <span className="">
+                        {card.monthlyVisits} / {card.monthlyTarget}
+                    </span>
                     <span className="text-[8px] font-medium text-green-600 uppercase">
                         Visit Done
                     </span>
@@ -59,7 +61,7 @@ const DoctorCard = ({ card }) => {
                         </span>
                     </div>
                 </div>
-                <Separator orientation="vertical" />
+                <Separator orientation="vertical" className="ml-2" />
                 <div className="flex items-center gap-2">
                     <AlarmClock className="size-6! text-green-600" />
                     <div className="flex flex-col text-xs font-semibold text-neutral-800">
@@ -88,14 +90,7 @@ const DoctorCard = ({ card }) => {
                         <ChevronRight className="size-4!" />
                     </Link>
                 </Button>
-                <Button
-                    variant="default"
-                    size="lg"
-                    className="rounded-md! gap-2 cursor-pointer bg-linear-to-b from-green-600 to-green-800 text-white w-full"
-                >
-                    <Plus className="size-4!" />
-                    Log Visit
-                </Button>
+                <VisitLogForm data={card} />
             </div>
         </div>
     );

@@ -14,3 +14,8 @@ export async function doctorscoll() {
     const db = await getDb();
     return db.collection("doctors");
 }
+
+export async function visitcoll() {
+    const db = await getDb();
+    return db.collection("visits");
+}

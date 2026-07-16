@@ -1,6 +1,7 @@
 "use server";
 
-import { doctorscoll } from "@/db/mongodb/collection";
+import { doctorscoll, visitcoll } from "@/db/mongodb/collection";
+import { endOfMonth, startOfMonth } from "date-fns";
 import { nanoid } from "nanoid";
 
 const serializeDoctor = (doctor) => ({
@@ -101,6 +102,7 @@ export const getDoctors = async (
 ) => {
     try {
         const doctor_coll = await doctorscoll();
+        const visit_coll = await visitcoll();
 
         const query = { uid };
 
@@ -123,7 +125,7 @@ export const getDoctors = async (
 
         const skip = (page - 1) * limit;
 
-        const [data, total] = await Promise.all([
+        const [doctors, total] = await Promise.all([
             doctor_coll
                 .find(query)
                 .sort({ createdAt: -1 })
@@ -134,21 +136,75 @@ export const getDoctors = async (
             doctor_coll.countDocuments(query),
         ]);
 
+        const startDate = startOfMonth(new Date());
+        const endDate = endOfMonth(new Date());
+
+        const doctorIds = doctors.map((doctor) => doctor.doctorId);
+
+        const visits = await visit_coll
+            .aggregate([
+                {
+                    $match: {
+                        uid,
+                        doctorId: {
+                            $in: doctorIds,
+                        },
+                        visitDate: {
+                            $gte: startDate,
+                            $lte: endDate,
+                        },
+                    },
+                },
+                {
+                    $group: {
+                        _id: "$doctorId",
+
+                        monthlyVisits: {
+                            $sum: 1,
+                        },
+
+                        lastVisit: {
+                            $max: "$visitDate",
+                        },
+                    },
+                },
+            ])
+            .toArray();
+
+        const visitMap = new Map();
+
+        visits.forEach((visit) => {
+            visitMap.set(visit._id, visit);
+        });
+
+        const enrichedDoctors = doctors.map((doctor) => {
+            const stats = visitMap.get(doctor.doctorId);
+            const monthlyVisits = stats?.monthlyVisits ?? 0;
+            return {
+                ...doctor,
+                monthlyVisits,
+                pendingVisits: Math.max(
+                    doctor.monthlyTarget - monthlyVisits,
+                    0,
+                ),
+                extraVisits: Math.max(monthlyVisits - doctor.monthlyTarget, 0),
+                lastVisit: stats?.lastVisit ?? null,
+            };
+        });
+
         return {
             error: false,
-            data: data.map(serializeDoctor),
-            pagination: JSON.parse(
-                JSON.stringify({
-                    page,
-                    limit,
-                    total,
-                    totalPages: Math.ceil(total / limit),
-                    hasNextPage: page * limit < total,
-                    hasPrevPage: page > 1,
-                }),
-            ),
+            data: enrichedDoctors.map(serializeDoctor),
+            pagination: {
+                page,
+                limit,
+                total,
+                totalPages: Math.ceil(total / limit),
+                hasNextPage: page * limit < total,
+                hasPrevPage: page > 1,
+            },
             message:
-                data.length > 0
+                enrichedDoctors.length > 0
                     ? "Doctors fetched successfully"
                     : "No doctors found",
         };
@@ -156,6 +212,7 @@ export const getDoctors = async (
         console.error("Error fetching doctors:", error);
         return {
             error: true,
+            data: [],
             message: error.message || "Failed to fetch doctors",
         };
     }
@@ -164,21 +221,57 @@ export const getDoctors = async (
 export const getDoctorById = async (doctorId, uid) => {
     try {
         const doctor_coll = await doctorscoll();
+        const visit_coll = await visitcoll();
 
-        const isDrExists = await doctor_coll.findOne({
-            $or: [{ doctorId: doctorId }, { uid: uid }],
+        const doctor = await doctor_coll.findOne({
+            doctorId,
+            uid,
         });
 
-        if (!isDrExists) {
+        if (!doctor) {
             return {
                 error: true,
                 message: "Doctor not found",
             };
         }
 
+        const startDate = startOfMonth(new Date());
+        const endDate = endOfMonth(new Date());
+
+        const [monthlyStats, lastVisit] = await Promise.all([
+            visit_coll.countDocuments({
+                uid,
+                doctorId,
+                visitDate: {
+                    $gte: startDate,
+                    $lte: endDate,
+                },
+            }),
+
+            visit_coll.findOne(
+                {
+                    uid,
+                    doctorId,
+                },
+                {
+                    sort: {
+                        visitDate: -1,
+                    },
+                },
+            ),
+        ]);
+
+        const enrichedDoctor = {
+            ...doctor,
+            monthlyVisits: monthlyStats,
+            pendingVisits: Math.max(doctor.monthlyTarget - monthlyStats, 0),
+            extraVisits: Math.max(monthlyStats - doctor.monthlyTarget, 0),
+            lastVisit: lastVisit?.visitDate ?? null,
+        };
+
         return {
             error: false,
-            data: serializeDoctor(isDrExists),
+            data: serializeDoctor(enrichedDoctor),
             message: "Doctor fetched successfully",
         };
     } catch (error) {
