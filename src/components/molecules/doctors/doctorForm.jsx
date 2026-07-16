@@ -44,7 +44,7 @@ import useAddDoctor from "@/hooks/doctors/useAddDoctor";
 import useUpdateDoctor from "@/hooks/doctors/useUpdateDoctor";
 import useDOCStore from "@/store";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Check, ChevronRight, ChevronsUpDown, Edit, Plus } from "lucide-react";
+import { Check, ChevronsUpDown, Edit, Plus } from "lucide-react";
 import { useState } from "react";
 import { Controller, useForm } from "react-hook-form";
 import z from "zod";
@@ -611,15 +611,25 @@ const DoctorForm = ({ initialValues = false }) => {
                                 </Field>
                             )}
                         />
-                        <Button
-                            type="submit"
-                            size="lg"
-                            disabled={isSubmitting}
-                            className="rounded-md! gap-2 cursor-pointer bg-linear-to-b from-green-600 to-green-800 text-white w-full"
-                        >
-                            Save Doctor Info
-                            <ChevronRight className="size-4!" />
-                        </Button>
+                        <div className="grid grid-cols-2 gap-4 w-full">
+                            <Button
+                                type="button"
+                                size="lg"
+                                variant="outline"
+                                className="rounded-md! gap-2 cursor-pointer w-full"
+                                onClick={() => setOpen(false)}
+                            >
+                                Close
+                            </Button>
+                            <Button
+                                type="submit"
+                                size="lg"
+                                disabled={isSubmitting}
+                                className="rounded-md! gap-2 cursor-pointer bg-linear-to-b from-green-600 to-green-800 text-white w-full"
+                            >
+                                {isEdit ? "Update Doctor" : "Add Doctor"}
+                            </Button>
+                        </div>
                     </FieldGroup>
                 </form>
             </DrawerContent>
