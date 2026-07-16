@@ -1,6 +1,6 @@
 "use client";
 
-import { Badge } from "@/components/ui/badge";
+import Badge from "@/components/atoms/badge";
 import { Button } from "@/components/ui/button";
 import {
     Command,
@@ -44,15 +44,17 @@ import useAddDoctor from "@/hooks/doctors/useAddDoctor";
 import useUpdateDoctor from "@/hooks/doctors/useUpdateDoctor";
 import useDOCStore from "@/store";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Check, ChevronsUpDown, Edit, Plus } from "lucide-react";
+import { Check, ChevronRight, ChevronsUpDown, Edit, Plus } from "lucide-react";
 import { useState } from "react";
 import { Controller, useForm } from "react-hook-form";
 import z from "zod";
 
 const DoctorForm = ({ initialValues = false }) => {
     const isEdit = Boolean(initialValues);
-    const [open, setOpen] = useState(false);
     const { user: { uid } = null } = useDOCStore();
+
+    const [open, setOpen] = useState(false);
+    const [specialityInput, setSpecialityInput] = useState("");
 
     const { mutate: addDoctor, isPending: isAddingPending } = useAddDoctor(uid);
     const { mutate: updateDoctor, isPending: isUpdatingPending } =
@@ -148,25 +150,65 @@ const DoctorForm = ({ initialValues = false }) => {
                             name="speciality"
                             control={form.control}
                             render={({ field, fieldState }) => (
-                                <Field
-                                    data-invalid={fieldState.invalid}
-                                    className="gap-1"
-                                >
-                                    <FieldLabel
-                                        htmlFor="speciality"
-                                        className="uppercase text-xs! text-neutral-700"
-                                    >
-                                        Speciality
-                                    </FieldLabel>
+                                <Field className="gap-2">
+                                    <FieldLabel>Specialities</FieldLabel>
                                     <Input
-                                        {...field}
-                                        id="speciality"
-                                        value={field.value || ""}
-                                        aria-invalid={fieldState.invalid}
-                                        placeholder="Enter doctor's speciality"
-                                        autoComplete="off"
+                                        value={specialityInput}
+                                        placeholder="Type speciality and press comma"
                                         className="rounded-md text-sm"
+                                        onChange={(e) => {
+                                            const value = e.target.value;
+                                            if (value.endsWith(",")) {
+                                                const speciality = value
+                                                    .slice(0, -1)
+                                                    .trim();
+                                                if (
+                                                    speciality &&
+                                                    !field.value.includes(
+                                                        speciality,
+                                                    )
+                                                ) {
+                                                    field.onChange([
+                                                        ...field.value,
+                                                        speciality,
+                                                    ]);
+                                                }
+                                                setSpecialityInput("");
+                                            } else {
+                                                setSpecialityInput(value);
+                                            }
+                                        }}
+                                        onKeyDown={(e) => {
+                                            if (e.key === "Enter") {
+                                                e.preventDefault();
+                                                const speciality =
+                                                    specialityInput.trim();
+                                                if (
+                                                    speciality &&
+                                                    !field.value.includes(
+                                                        speciality,
+                                                    )
+                                                ) {
+                                                    field.onChange([
+                                                        ...field.value,
+                                                        speciality,
+                                                    ]);
+                                                }
+                                                setSpecialityInput("");
+                                            }
+                                        }}
                                     />
+                                    <div className="flex flex-wrap gap-2">
+                                        {field.value.map((item) => (
+                                            <Badge
+                                                key={item}
+                                                variant="green"
+                                                className="w-fit text-[8px] uppercase"
+                                            >
+                                                {item}
+                                            </Badge>
+                                        ))}
+                                    </div>
                                     {fieldState.invalid && (
                                         <FieldError
                                             errors={[fieldState.error]}
@@ -223,12 +265,22 @@ const DoctorForm = ({ initialValues = false }) => {
                                     <Input
                                         {...field}
                                         id="mobile"
-                                        type="number"
+                                        type="tel"
+                                        inputMode="numeric"
+                                        maxLength={10}
                                         value={field.value || ""}
                                         aria-invalid={fieldState.invalid}
                                         placeholder="Enter doctor's mobile number"
                                         autoComplete="off"
                                         className="rounded-md text-sm"
+                                        onChange={(e) => {
+                                            const value =
+                                                e.target.value.replace(
+                                                    /\D/g,
+                                                    "",
+                                                );
+                                            field.onChange(value);
+                                        }}
                                     />
                                     {fieldState.invalid && (
                                         <FieldError
@@ -326,7 +378,8 @@ const DoctorForm = ({ initialValues = false }) => {
                                                                         key={
                                                                             day
                                                                         }
-                                                                        variant="secondary"
+                                                                        variant="green"
+                                                                        className="w-fit text-[8px] uppercase"
                                                                     >
                                                                         {day}
                                                                     </Badge>
@@ -334,7 +387,10 @@ const DoctorForm = ({ initialValues = false }) => {
 
                                                             {field.value
                                                                 .length > 2 && (
-                                                                <Badge variant="outline">
+                                                                <Badge
+                                                                    variant="green"
+                                                                    className="w-fit text-[8px] uppercase"
+                                                                >
                                                                     +
                                                                     {field.value
                                                                         .length -
@@ -559,9 +615,10 @@ const DoctorForm = ({ initialValues = false }) => {
                             type="submit"
                             size="lg"
                             disabled={isSubmitting}
-                            className="w-full rounded-md!"
+                            className="rounded-md! gap-2 cursor-pointer bg-linear-to-b from-green-600 to-green-800 text-white w-full"
                         >
-                            Save Doctor
+                            Save Doctor Info
+                            <ChevronRight className="size-4!" />
                         </Button>
                     </FieldGroup>
                 </form>
@@ -574,13 +631,11 @@ export default DoctorForm;
 
 const DOCTOR_FORM_SCHEMA = z.object({
     name: z.string().min(1, "Name is required"),
-    speciality: z.string().min(1, "Speciality is required"),
+    speciality: z.array(z.string()).min(1, "Speciality is required"),
     hospital: z.string().optional(),
     mobile: z.string().optional(),
     monthlyTarget: z.coerce.number().min(1, "Monthly target is required"),
-    visitingDays: z
-        .array(z.string())
-        .min(1, "Select at least one visiting day"),
+    visitingDays: z.array(z.string()).min(1, "Select atleast one visiting day"),
     startTime: z.string().min(1, "Start time is required"),
     endTime: z.string().min(1, "End time is required"),
     appointmentRequired: z.boolean(),
@@ -608,7 +663,7 @@ const DAYS = [
 
 const DEFAULT_DOCTOR_FORM_VALUES = {
     name: "",
-    speciality: "",
+    speciality: [],
     hospital: "",
     mobile: "",
     monthlyTarget: "",

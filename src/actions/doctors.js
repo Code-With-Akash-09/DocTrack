@@ -3,6 +3,13 @@
 import { doctorscoll } from "@/db/mongodb/collection";
 import { nanoid } from "nanoid";
 
+const serializeDoctor = (doctor) => ({
+    ...doctor,
+    _id: doctor?._id ? doctor._id.toString() : undefined,
+    createdAt: doctor?.createdAt ? doctor.createdAt.toISOString() : undefined,
+    updatedAt: doctor?.updatedAt ? doctor.updatedAt.toISOString() : undefined,
+});
+
 export const addDoctor = async (uid, body) => {
     try {
         const doctor_coll = await doctorscoll();
@@ -32,11 +39,9 @@ export const addDoctor = async (uid, body) => {
 
         return {
             error: false,
-            data: JSON.parse(
-                JSON.stringify({
-                    _id: result.insertedId,
-                }),
-            ),
+            data: {
+                _id: result.insertedId.toString(),
+            },
             message: "Doctor added successfully",
         };
     } catch (error) {
@@ -75,12 +80,10 @@ export const updateDoctor = async (doctorId, uid, body) => {
 
         return {
             error: false,
-            data: JSON.parse(
-                JSON.stringify({
-                    matchedCount: result.matchedCount,
-                    modifiedCount: result.modifiedCount,
-                }),
-            ),
+            data: {
+                matchedCount: result.matchedCount,
+                modifiedCount: result.modifiedCount,
+            },
             message: "Doctor updated successfully",
         };
     } catch (error) {
@@ -133,15 +136,17 @@ export const getDoctors = async (
 
         return {
             error: false,
-            data,
-            pagination: {
-                page,
-                limit,
-                total,
-                totalPages: Math.ceil(total / limit),
-                hasNextPage: page * limit < total,
-                hasPrevPage: page > 1,
-            },
+            data: data.map(serializeDoctor),
+            pagination: JSON.parse(
+                JSON.stringify({
+                    page,
+                    limit,
+                    total,
+                    totalPages: Math.ceil(total / limit),
+                    hasNextPage: page * limit < total,
+                    hasPrevPage: page > 1,
+                }),
+            ),
             message:
                 data.length > 0
                     ? "Doctors fetched successfully"
@@ -173,7 +178,7 @@ export const getDoctorById = async (doctorId, uid) => {
 
         return {
             error: false,
-            data: isDrExists,
+            data: serializeDoctor(isDrExists),
             message: "Doctor fetched successfully",
         };
     } catch (error) {
