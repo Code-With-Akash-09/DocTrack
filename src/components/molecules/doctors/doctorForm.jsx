@@ -45,11 +45,11 @@ import useUpdateDoctor from "@/hooks/doctors/useUpdateDoctor";
 import useDOCStore from "@/store";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Check, ChevronsUpDown, Edit, Plus } from "lucide-react";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Controller, useForm } from "react-hook-form";
 import z from "zod";
 
-const DoctorForm = ({ initialValues = false }) => {
+const DoctorForm = ({ initialValues = null, icon = false }) => {
     const isEdit = Boolean(initialValues);
     const { user: { uid } = null } = useDOCStore();
 
@@ -64,7 +64,7 @@ const DoctorForm = ({ initialValues = false }) => {
 
     const form = useForm({
         resolver: zodResolver(DOCTOR_FORM_SCHEMA),
-        defaultValues: initialValues || DEFAULT_DOCTOR_FORM_VALUES,
+        defaultValues: DEFAULT_DOCTOR_FORM_VALUES,
     });
 
     const onSubmit = (values) => {
@@ -77,13 +77,27 @@ const DoctorForm = ({ initialValues = false }) => {
         });
     };
 
+    useEffect(() => {
+        if (initialValues) {
+            form.reset({
+                ...DEFAULT_DOCTOR_FORM_VALUES,
+                ...initialValues,
+                appointmentRequired: Boolean(
+                    initialValues?.appointmentRequired,
+                ),
+            });
+        } else {
+            form.reset(DEFAULT_DOCTOR_FORM_VALUES);
+        }
+    }, [initialValues, form]);
+
     return (
         <Drawer open={open} onOpenChange={setOpen}>
             <DrawerTrigger
                 render={
                     <Button
                         type="button"
-                        size="lg"
+                        size={icon ? "icon-lg" : "lg"}
                         className="rounded-md! gap-2 cursor-pointer bg-linear-to-b from-green-600 to-green-800 text-white"
                     />
                 }
@@ -93,7 +107,7 @@ const DoctorForm = ({ initialValues = false }) => {
                 ) : (
                     <Plus className="size-4!" />
                 )}
-                {isEdit ? "Edit Doctor" : "Add Doctor"}
+                {!icon && (isEdit ? "Edit Doctor" : "Add Doctor")}
             </DrawerTrigger>
             <DrawerContent
                 className={
@@ -571,10 +585,8 @@ const DoctorForm = ({ initialValues = false }) => {
                                     </FieldContent>
                                     <Switch
                                         id="appointmentRequired"
-                                        checked={Boolean(field.value)}
-                                        onCheckedChange={(checked) =>
-                                            field.onChange(Boolean(checked))
-                                        }
+                                        checked={field.value}
+                                        onCheckedChange={field.onChange}
                                         className="my-auto"
                                     />
                                 </Field>

@@ -11,7 +11,7 @@ const useGetDoctorById = ({ uid, doctorId }) => {
                 throw new Error(resp.message);
             }
 
-            return resp;
+            return resp.data;
         },
         enabled: !!uid && !!doctorId,
         retry: 1,

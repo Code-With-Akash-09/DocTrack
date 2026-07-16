@@ -19,6 +19,9 @@ const useUpdateDoctor = ({ uid, doctorId }) => {
         },
         onSuccess: () => {
             queryClient.invalidateQueries({ queryKey: ["getDoctors", uid] });
+            queryClient.invalidateQueries({
+                queryKey: ["getDoctorById", uid, doctorId],
+            });
         },
         onError: (error) => {
             toast.error(error.message);
