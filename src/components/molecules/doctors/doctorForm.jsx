@@ -111,7 +111,7 @@ const DoctorForm = ({ initialValues = null, icon = false }) => {
             </DrawerTrigger>
             <DrawerContent
                 className={
-                    "md:max-w-md mx-auto rounded-b-none overflow-hidden p-4 -bottom-2!"
+                    "md:max-w-md mx-auto rounded-b-none overflow-hidden hide-scrollbar! p-4 -bottom-2!"
                 }
             >
                 <DrawerHeader className="gap-0.5!">
@@ -339,7 +339,10 @@ const DoctorForm = ({ initialValues = null, icon = false }) => {
                                             >
                                                 <SelectValue placeholder="Select Monthly Target" />
                                             </SelectTrigger>
-                                            <SelectContent className="rounded-md max-h-32">
+                                            <SelectContent
+                                                align="start"
+                                                className="w-40! rounded-md max-h-40"
+                                            >
                                                 {TARGET_OPTIONS.map(
                                                     (option) => (
                                                         <SelectItem
@@ -421,7 +424,10 @@ const DoctorForm = ({ initialValues = null, icon = false }) => {
                                                 </div>
                                                 <ChevronsUpDown className="ml-2 h-4 w-4 opacity-50" />
                                             </PopoverTrigger>
-                                            <PopoverContent className="w-full p-0 rounded-md max-h-32">
+                                            <PopoverContent
+                                                align="start"
+                                                className="w-40! p-0 rounded-md max-h-40"
+                                            >
                                                 <Command className="rounded-md! w-full">
                                                     <CommandInput
                                                         placeholder="Search day..."
@@ -430,7 +436,7 @@ const DoctorForm = ({ initialValues = null, icon = false }) => {
                                                     <CommandEmpty>
                                                         No day found.
                                                     </CommandEmpty>
-                                                    <CommandGroup className="overflow-y-auto max-h-32">
+                                                    <CommandGroup className="overflow-y-auto max-h-40">
                                                         {DAYS.map((day) => {
                                                             const selected =
                                                                 field.value?.includes(
@@ -498,7 +504,7 @@ const DoctorForm = ({ initialValues = null, icon = false }) => {
                                 render={({ field, fieldState }) => (
                                     <Field
                                         data-invalid={fieldState.invalid}
-                                        className="gap-1"
+                                        className="gap-1 w-full"
                                     >
                                         <FieldLabel
                                             htmlFor="startTime"
@@ -514,7 +520,7 @@ const DoctorForm = ({ initialValues = null, icon = false }) => {
                                             aria-invalid={fieldState.invalid}
                                             placeholder="start time"
                                             autoComplete="off"
-                                            className="rounded-md text-sm"
+                                            className="rounded-md text-sm w-full"
                                         />
                                         {fieldState.invalid && (
                                             <FieldError
@@ -530,7 +536,7 @@ const DoctorForm = ({ initialValues = null, icon = false }) => {
                                 render={({ field, fieldState }) => (
                                     <Field
                                         data-invalid={fieldState.invalid}
-                                        className="gap-1"
+                                        className="gap-1 w-full"
                                     >
                                         <FieldLabel
                                             htmlFor="endTime"
@@ -546,7 +552,7 @@ const DoctorForm = ({ initialValues = null, icon = false }) => {
                                             aria-invalid={fieldState.invalid}
                                             placeholder="End time"
                                             autoComplete="off"
-                                            className="rounded-md text-sm"
+                                            className="rounded-md text-sm w-full"
                                         />
                                         {fieldState.invalid && (
                                             <FieldError
