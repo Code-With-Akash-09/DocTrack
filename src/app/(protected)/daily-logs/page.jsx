@@ -35,8 +35,6 @@ const page = () => {
         }
     }, [hasNextPage, fetchNextPage, isFetchingNextPage, inView]);
 
-    console.log("visits", visits);
-
     return (
         <div className="flex h-full flex-col min-h-0 gap-4 w-full flex-1 overflow-hidden p-4">
             <div className="grid grid-cols-2 gap-4 w-full shrink-0">
