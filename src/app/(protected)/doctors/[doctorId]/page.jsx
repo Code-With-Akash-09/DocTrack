@@ -121,7 +121,7 @@ const DoctorIdPage = () => {
                     <span className="text-neutral-600 font-semibold text-xs uppercase">
                         Weekly Schedule
                     </span>
-                    <div className="flex flex-row w-full ring bg-green-50 ring-green-600/10 gap-4 p-4 rounded-md">
+                    <div className="flex flex-row w-full ring bg-green-50 ring-green-600/10 gap-4 px-2 py-3 rounded-md">
                         <div className="flex items-center gap-2">
                             <Calendar className="size-6! text-green-600" />
                             <div className="flex flex-col text-xs font-semibold text-neutral-800">
@@ -152,7 +152,7 @@ const DoctorIdPage = () => {
                             </div>
                         </div>
                     </div>
-                    <div className="flex flex-row w-full bg-green-50 ring ring-green-600/10 gap-4 p-4 rounded-md">
+                    <div className="flex flex-row w-full bg-green-50 ring ring-green-600/10 gap-4 px-2 py-3 rounded-md">
                         <div className="flex items-center gap-2">
                             <ClipboardClock className="size-6! text-green-600" />
                             <div className="flex flex-col text-xs font-semibold text-neutral-800">

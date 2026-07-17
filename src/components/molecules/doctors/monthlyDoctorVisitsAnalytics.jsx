@@ -97,9 +97,9 @@ const DoctorStats = ({ stats }) => {
 
 const DoctorStatsCard = ({ item }) => {
     return (
-        <div className="flex w-full flex-col items-center justify-center gap-1 rounded-lg bg-green-50 p-4 ring ring-green-600/10">
+        <div className="flex w-full flex-col items-center justify-center gap-1 rounded-lg bg-green-50 p-2 ring ring-green-600/10">
             <span className="text-2xl font-semibold">{item.value}</span>
-            <span className="text-[10px] uppercase text-neutral-700">
+            <span className="text-[8px] uppercase text-neutral-700">
                 {item.title}
             </span>
         </div>

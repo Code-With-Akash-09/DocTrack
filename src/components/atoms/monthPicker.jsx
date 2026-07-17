@@ -67,7 +67,7 @@ export default function MonthPicker({
                 <CalendarDays className="mr-2 size-4" />
                 {format(value, "MMMM yyyy")}
             </PopoverTrigger>
-            <PopoverContent className="max-w-md! w-96! grid grid-cols-2 rounded-md gap-2">
+            <PopoverContent align="start" className="max-w-md! grid grid-cols-2 rounded-md gap-2">
                 <div className="w-full">
                     <p className="mb-2 text-xs font-medium uppercase text-muted-foreground">
                         Month
