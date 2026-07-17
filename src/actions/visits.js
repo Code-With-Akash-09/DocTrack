@@ -143,3 +143,104 @@ export const getDoctorVisitsByMonth = async (uid, doctorId, date) => {
         };
     }
 };
+
+export const getVisitByUid = async (
+    uid,
+    { date, page = 1, limit = 10 } = {},
+) => {
+    try {
+        const visit_coll = await visitcoll();
+
+        const startDate = startOfMonth(new Date(date));
+        const endDate = endOfMonth(new Date(date));
+
+        const skip = (page - 1) * limit;
+
+        const query = {
+            uid,
+            visitDate: {
+                $gte: startDate,
+                $lte: endDate,
+            },
+        };
+
+        const [visits, total] = await Promise.all([
+            visit_coll
+                .aggregate([
+                    {
+                        $match: query,
+                    },
+                    {
+                        $sort: {
+                            visitDate: -1,
+                        },
+                    },
+                    {
+                        $skip: skip,
+                    },
+                    {
+                        $limit: limit,
+                    },
+                    {
+                        $lookup: {
+                            from: "doctors",
+                            localField: "doctorId",
+                            foreignField: "doctorId",
+                            as: "doctor",
+                        },
+                    },
+                    {
+                        $unwind: {
+                            path: "$doctor",
+                            preserveNullAndEmptyArrays: true,
+                        },
+                    },
+                    {
+                        $project: {
+                            _id: 1,
+                            visitId: 1,
+                            doctorId: 1,
+                            uid: 1,
+                            visitDate: 1,
+                            comments: 1,
+                            createdAt: 1,
+                            doctor: {
+                                doctorId: "$doctor.doctorId",
+                                name: "$doctor.name",
+                                speciality: "$doctor.speciality",
+                                hospital: "$doctor.hospital",
+                                mobile: "$doctor.mobile",
+                                monthlyTarget: "$doctor.monthlyTarget",
+                                appointmentRequired:
+                                    "$doctor.appointmentRequired",
+                            },
+                        },
+                    },
+                ])
+                .toArray(),
+
+            visit_coll.countDocuments(query),
+        ]);
+
+        return {
+            error: false,
+            data: JSON.parse(JSON.stringify(visits)),
+            pagination: {
+                page,
+                limit,
+                total,
+                totalPages: Math.ceil(total / limit),
+                hasNextPage: page * limit < total,
+                hasPrevPage: page > 1,
+            },
+            message: "Visits fetched successfully",
+        };
+    } catch (error) {
+        console.error("Error fetching visit by UID:", error);
+
+        return {
+            error: true,
+            message: error.message || "Failed to fetch visit by UID",
+        };
+    }
+};

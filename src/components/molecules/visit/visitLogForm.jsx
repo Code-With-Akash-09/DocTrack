@@ -32,7 +32,13 @@ import { useEffect, useState } from "react";
 import { Controller, useForm } from "react-hook-form";
 import z from "zod";
 
-const VisitLogForm = ({ initialValues = false, data }) => {
+const VisitLogForm = ({
+    initialValues = false,
+    data,
+    icon = false,
+    size = "lg",
+    variant = "default",
+}) => {
     const isEdit = Boolean(initialValues);
 
     const [open, setOpen] = useState(false);
@@ -72,8 +78,13 @@ const VisitLogForm = ({ initialValues = false, data }) => {
                 render={
                     <Button
                         type="button"
-                        size="lg"
-                        className="rounded-md! gap-2 cursor-pointer bg-linear-to-b from-green-600 to-green-800 text-white"
+                        variant={variant}
+                        size={size}
+                        className={
+                            variant === "default"
+                                ? "rounded-md! gap-2 cursor-pointer bg-linear-to-b from-green-600 to-green-800 text-white"
+                                : "rounded-md!"
+                        }
                     />
                 }
             >
@@ -82,7 +93,7 @@ const VisitLogForm = ({ initialValues = false, data }) => {
                 ) : (
                     <Plus className="size-4!" />
                 )}
-                {isEdit ? "Edit Visit" : "Log Visit"}
+                {!icon && (isEdit ? "Edit Visit" : "Log Visit")}
             </DrawerTrigger>
             <DrawerContent
                 className={

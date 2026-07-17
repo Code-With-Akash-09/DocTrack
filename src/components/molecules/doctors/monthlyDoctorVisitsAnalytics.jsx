@@ -4,7 +4,7 @@ import useGetDoctorVisits from "@/hooks/visits/useGetDoctorVisits";
 import { format } from "date-fns";
 import { AlarmClockCheck } from "lucide-react";
 import { useState } from "react";
-import VisitLogForm from "./visitLogForm";
+import VisitLogForm from "../visit/visitLogForm";
 
 const MonthlyDoctorVisitsAnalytics = ({ doctor }) => {
     const [selectedMonth, setSelectedMonth] = useState(() => new Date());

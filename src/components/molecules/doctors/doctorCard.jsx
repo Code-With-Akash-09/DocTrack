@@ -10,7 +10,7 @@ import {
     User,
 } from "lucide-react";
 import Link from "next/link";
-import VisitLogForm from "./visitLogForm";
+import VisitLogForm from "../visit/visitLogForm";
 
 const DoctorCard = ({ card }) => {
     const Icon = SPECIALITY_ICONS[card.speciality[0]] ?? Stethoscope;

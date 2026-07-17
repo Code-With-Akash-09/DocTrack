@@ -36,6 +36,7 @@ export default function MonthPicker({
     onChange,
     startYear = 2020,
     endYear = new Date().getFullYear() + 5,
+    align = "start",
 }) {
     const years = Array.from(
         { length: endYear - startYear + 1 },
@@ -69,7 +70,7 @@ export default function MonthPicker({
                 {format(value, "MMMM yyyy")}
             </PopoverTrigger>
             <PopoverContent
-                align="start"
+                align={align}
                 className="max-w-md! grid grid-cols-2 rounded-md gap-2"
             >
                 <div className="w-full">
