@@ -1,9 +1,13 @@
+"use client";
+
 import { deleteDoctorById } from "@/actions/doctors";
 import { queryClient } from "@/services/queryClient";
 import { useMutation } from "@tanstack/react-query";
+import { useRouter } from "next/navigation";
 import { toast } from "sonner";
 
 const useDeleteDoctorById = ({ uid, doctorId }) => {
+    const router = useRouter();
     return useMutation({
         mutationKey: ["deleteDoctorById", uid, doctorId],
 
@@ -51,12 +55,11 @@ const useDeleteDoctorById = ({ uid, doctorId }) => {
                     context.previousDoctors,
                 );
             }
-
             toast.error(error.message);
         },
 
-        onSuccess: (data) => {
-            toast.success(data.message);
+        onSuccess: () => {
+            router.push("/doctors");
         },
 
         onSettled: () => {

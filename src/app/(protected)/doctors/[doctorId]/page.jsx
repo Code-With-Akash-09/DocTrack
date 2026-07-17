@@ -1,11 +1,11 @@
 "use client";
 
+import BackButton from "@/components/atoms/backButton";
+import DeleteDoctor from "@/components/atoms/doctors/deleteDoctor";
 import DoctorForm from "@/components/molecules/doctors/doctorForm";
-import { Button } from "@/components/ui/button";
 import { Spinner } from "@/components/ui/spinner";
 import useGetDoctorById from "@/hooks/doctors/useGetDoctorById";
 import useDOCStore from "@/store";
-import { ArrowLeft } from "lucide-react";
 import { useParams } from "next/navigation";
 
 const DoctorIdPage = () => {
@@ -24,15 +24,10 @@ const DoctorIdPage = () => {
     return (
         <div className="relative flex flex-col w-full min-h-0 gap-4 p-4 overflow-hidden">
             <div className="flex justify-between gap-4 w-full">
-                <Button
-                    variant="outline"
-                    className="rounded-md!"
-                    size="icon-lg"
-                >
-                    <ArrowLeft className="size-4!" />
-                </Button>
-                <div className="flex w-fit gap-4">
+                <BackButton />
+                <div className="flex w-fit gap-2">
                     <DoctorForm initialValues={doctor} icon />
+                    <DeleteDoctor doctor={doctor} />
                 </div>
             </div>
         </div>

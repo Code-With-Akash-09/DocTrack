@@ -104,7 +104,7 @@ export const getDoctors = async (
         const doctor_coll = await doctorscoll();
         const visit_coll = await visitcoll();
 
-        const query = { uid };
+        const query = { uid, status: "active" };
 
         if (search.trim()) {
             query.$or = [
@@ -298,13 +298,18 @@ export const deleteDoctorById = async (doctorId, uid) => {
             };
         }
 
-        const result = await doctor_coll.deleteOne({ doctorId: doctorId });
+        await doctor_coll.updateOne(
+            { doctorId: doctorId },
+            {
+                $set: {
+                    status: "inactive",
+                    updatedAt: new Date(),
+                },
+            },
+        );
 
         return {
             error: false,
-            data: {
-                deletedCount: result.deletedCount,
-            },
             message: "Doctor deleted successfully",
         };
     } catch (error) {
