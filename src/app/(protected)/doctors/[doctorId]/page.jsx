@@ -50,7 +50,7 @@ const DoctorIdPage = () => {
             </div>
             <Separator />
             <div className="flex-1 min-h-0 space-y-4 overflow-y-auto overflow-x-hidden hide-scrollbar w-full">
-                <div className="flex relative w-full p-4 rounded-lg border border-neutral-100 backdrop:blur-sm bg-white/40">
+                <div className="flex relative w-full p-4 rounded-xl border border-neutral-100 backdrop:blur-sm bg-white/40">
                     <Stethoscope className="z-0 absolute -right-5 size-28! text-neutral-200" />
                     <div className="flex w-full flex-col gap-2 z-10 ">
                         <div className="flex flex-col gap-2">
@@ -117,7 +117,7 @@ const DoctorIdPage = () => {
                         </div>
                     </div>
                 </div>
-                <div className="flex flex-col relative w-full p-4 gap-4 rounded-lg border border-neutral-100 backdrop:blur-sm bg-white/40">
+                <div className="flex flex-col relative w-full p-4 gap-4 rounded-xl border border-neutral-100 backdrop:blur-sm bg-white/40">
                     <span className="text-neutral-600 font-semibold text-xs uppercase">
                         Weekly Schedule
                     </span>
@@ -168,7 +168,7 @@ const DoctorIdPage = () => {
                         </div>
                     </div>
                 </div>
-                <div className="flex flex-col relative w-full p-4 gap-4 rounded-lg border border-neutral-100 backdrop:blur-sm bg-white/40">
+                <div className="flex flex-col relative w-full p-4 gap-4 rounded-xl border border-neutral-100 backdrop:blur-sm bg-white/40">
                     <span className="text-neutral-600 font-semibold text-xs uppercase">
                         General Notes
                     </span>

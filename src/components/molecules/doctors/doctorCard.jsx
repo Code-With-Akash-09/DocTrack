@@ -1,6 +1,5 @@
 import Badge from "@/components/atoms/badge";
 import { Button } from "@/components/ui/button";
-import { Separator } from "@/components/ui/separator";
 import { SPECIALITY_ICONS } from "@/constants/doctor";
 import { formatTimeRange } from "@/lib/utils";
 import {
@@ -17,8 +16,8 @@ const DoctorCard = ({ card }) => {
     const Icon = SPECIALITY_ICONS[card.speciality[0]] ?? Stethoscope;
 
     return (
-        <div className="w-full max-w-full rounded-lg shadow border border-neutral-100 bg-white p-4 space-y-4">
-            <div className="flex w-full gap-4">
+        <div className="w-full max-w-full rounded-xl shadow border border-neutral-100 bg-white p-4 space-y-2">
+            <div className="flex w-full gap-2">
                 <div className="flex items-center justify-center h-16 w-16 shrink-0 rounded-full bg-green-50 ring ring-green-600/20 ">
                     <Icon className="size-8! text-green-600 m-auto" />
                 </div>
@@ -47,13 +46,13 @@ const DoctorCard = ({ card }) => {
                     </span>
                 </div>
             </div>
-            <div className="flex flex-row w-full bg-green-50 ring-green-600/20 gap-4 p-4 rounded-md">
+            <div className="grid grid-cols-2 w-full bg-green-50 ring-green-600/20 gap-2 p-2 rounded-md">
                 <div className="flex items-center gap-2">
                     <Calendar className="size-6! text-green-600" />
-                    <div className="flex flex-col text-xs font-semibold text-neutral-800">
+                    <div className="flex flex-col text-[10px] font-semibold text-neutral-800">
                         <span>
                             {card.visitingDays
-                                .map((day) => day.trim().substring(0, 3))
+                                .map((day) => day.trim().substring(0, 2))
                                 .join(", ")}
                         </span>
                         <span className="text-[10px] text-neutral-600 font-normal">
@@ -61,10 +60,9 @@ const DoctorCard = ({ card }) => {
                         </span>
                     </div>
                 </div>
-                <Separator orientation="vertical" className="ml-2" />
                 <div className="flex items-center gap-2">
                     <AlarmClock className="size-6! text-green-600" />
-                    <div className="flex flex-col text-xs font-semibold text-neutral-800">
+                    <div className="flex flex-col text-[10px] font-semibold text-neutral-800">
                         <span>
                             {formatTimeRange(card.startTime, card.endTime)}
                         </span>
@@ -74,7 +72,7 @@ const DoctorCard = ({ card }) => {
                     </div>
                 </div>
             </div>
-            <div className="grid grid-cols-2 gap-4 w-full">
+            <div className="grid grid-cols-2 gap-2 w-full">
                 <Button
                     variant="outline"
                     size="lg"

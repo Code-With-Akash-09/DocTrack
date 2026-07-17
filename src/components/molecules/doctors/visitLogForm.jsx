@@ -237,7 +237,7 @@ const VisitLogForm = ({ initialValues = false, data }) => {
                                 </Field>
                             )}
                         />
-                        <div className="grid grid-cols-2 gap-4 w-full">
+                        <div className="grid grid-cols-2 gap-2 w-full">
                             <Button
                                 type="button"
                                 size="lg"

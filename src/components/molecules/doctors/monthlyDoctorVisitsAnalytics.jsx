@@ -24,8 +24,8 @@ const MonthlyDoctorVisitsAnalytics = ({ doctor }) => {
     };
 
     return (
-        <div className="flex flex-col gap-6 w-full rounded-lg border border-neutral-100 backdrop:blur-sm bg-white/40 p-4">
-            <div className="grid grid-cols-2 gap-4 w-full">
+        <div className="flex flex-col gap-6 w-full rounded-xl border border-neutral-100 backdrop:blur-sm bg-white/40 p-4">
+            <div className="grid grid-cols-2 gap-2 w-full">
                 <MonthPicker
                     value={selectedMonth}
                     onChange={setSelectedMonth}
@@ -63,7 +63,7 @@ const MonthlyDoctorVisitsAnalytics = ({ doctor }) => {
                             </div>
                         ))
                     ) : (
-                        <div className="flex w-full items-center justify-center p-4">
+                        <div className="flex w-full items-center justify-center p-4 border border-neutral-200 rounded-xl bg-neutral-50">
                             <p className="text-sm text-muted-foreground">
                                 No visits found.
                             </p>
