@@ -4,6 +4,7 @@ import useGetDoctorVisits from "@/hooks/visits/useGetDoctorVisits";
 import { format } from "date-fns";
 import { AlarmClockCheck } from "lucide-react";
 import { useState } from "react";
+import VisitLogForm from "./visitLogForm";
 
 const MonthlyDoctorVisitsAnalytics = ({ doctor }) => {
     const [selectedMonth, setSelectedMonth] = useState(() => new Date());
@@ -24,7 +25,13 @@ const MonthlyDoctorVisitsAnalytics = ({ doctor }) => {
 
     return (
         <div className="flex flex-col gap-6 w-full rounded-lg border border-neutral-100 backdrop:blur-sm bg-white/40 p-4">
-            <MonthPicker value={selectedMonth} onChange={setSelectedMonth} />
+            <div className="grid grid-cols-2 gap-4 w-full">
+                <MonthPicker
+                    value={selectedMonth}
+                    onChange={setSelectedMonth}
+                />
+                <VisitLogForm data={doctor} />
+            </div>
             <div className="flex flex-col relative w-full gap-4">
                 <span className="text-neutral-600 font-semibold text-xs uppercase">
                     This Month Progress
