@@ -226,6 +226,7 @@ export const getDoctorById = async (doctorId, uid) => {
         const doctor = await doctor_coll.findOne({
             doctorId,
             uid,
+            status: "active",
         });
 
         if (!doctor) {
