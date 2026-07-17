@@ -4,8 +4,8 @@ import BackButton from "@/components/atoms/backButton";
 import Badge from "@/components/atoms/badge";
 import DeleteDoctor from "@/components/atoms/doctors/deleteDoctor";
 import DoctorForm from "@/components/molecules/doctors/doctorForm";
+import MonthlyDoctorVisitsAnalytics from "@/components/molecules/doctors/monthlyDoctorVisitsAnalytics";
 import { Button } from "@/components/ui/button";
-import { Progress, ProgressIndicator } from "@/components/ui/progress";
 import { Separator } from "@/components/ui/separator";
 import { Spinner } from "@/components/ui/spinner";
 import useGetDoctorById from "@/hooks/doctors/useGetDoctorById";
@@ -25,8 +25,6 @@ const DoctorIdPage = () => {
     const { doctorId } = useParams();
     const { user: { uid } = null } = useDOCStore();
     const { data: doctor, isLoading } = useGetDoctorById({ uid, doctorId });
-
-    console.log("doctor", doctor);
 
     if (isLoading) {
         return (
@@ -179,65 +177,10 @@ const DoctorIdPage = () => {
                             "No notes available for this doctor."}
                     </p>
                 </div>
-                <div className="flex flex-col relative w-full p-4 gap-4 rounded-lg border border-neutral-100 backdrop:blur-sm bg-white/40">
-                    <span className="text-neutral-600 font-semibold text-xs uppercase">
-                        This Month Progress
-                    </span>
-                    <DoctorStats doctor={doctor} />
-                    <Progress
-                        value={
-                            (doctor.monthlyVisits / doctor.monthlyTarget) * 100
-                        }
-                        className={
-                            "bg-muted relative h-8 w-full overflow-hidden rounded-md"
-                        }
-                    >
-                        <ProgressIndicator className={"bg-green-800"} />
-                    </Progress>
-                </div>
+                <MonthlyDoctorVisitsAnalytics doctor={doctor} />
             </div>
         </div>
     );
 };
 
 export default DoctorIdPage;
-
-const DoctorStats = ({ doctor }) => {
-    const stats = [
-        {
-            title: "Visits Done",
-            value: doctor.monthlyVisits,
-        },
-        {
-            title: "Visits Pending",
-            value: doctor.pendingVisits,
-        },
-        {
-            title: "Extra Visits",
-            value: doctor.extraVisits,
-        },
-    ];
-
-    return (
-        <div className="grid grid-cols-3 gap-4 w-full">
-            {stats.map((item) => (
-                <DoctorStatsCard
-                    key={item.title}
-                    title={item.title}
-                    value={item.value}
-                />
-            ))}
-        </div>
-    );
-};
-
-const DoctorStatsCard = ({ title, value }) => {
-    return (
-        <div className="flex w-full flex-col items-center justify-center gap-1 rounded-lg bg-green-50 p-4 ring ring-green-600/10">
-            <span className="text-2xl font-semibold">{value}</span>
-            <span className="text-[10px] uppercase text-neutral-700">
-                {title}
-            </span>
-        </div>
-    );
-};

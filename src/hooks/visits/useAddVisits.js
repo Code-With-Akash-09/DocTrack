@@ -16,9 +16,11 @@ const useAddVisits = ({ uid, doctorId }) => {
             return resp;
         },
         onSuccess: () => {
-            queryClient.invalidateQueries(["getVisits", uid]);
-            queryClient.invalidateQueries(["getDoctors", uid]);
-            queryClient.invalidateQueries(["getDoctorById", uid, doctorId]);
+            queryClient.invalidateQueries({ queryKey: ["getVisits", uid] });
+            queryClient.invalidateQueries({ queryKey: ["getDoctors", uid] });
+            queryClient.invalidateQueries({
+                queryKey: ["getDoctorById", uid, doctorId],
+            });
         },
         onError: (error) => {
             toast.error(error.message);
