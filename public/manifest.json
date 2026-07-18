@@ -1,0 +1,25 @@
+{
+    "name": "Doctor Visit Tracker",
+    "short_name": "DocTrack",
+    "description": "Track and manage your doctor visits with ease.",
+    "start_url": "/",
+    "display": "standalone",
+    "background_color": "#f5f5f5",
+    "theme_color": "#16a34a",
+    "orientation": "portrait",
+    "scope": "/",
+    "icons": [
+        {
+            "src": "/logo.png",
+            "sizes": "192x192",
+            "type": "image/png",
+            "purpose": "any maskable"
+        },
+        {
+            "src": "/logo.png",
+            "sizes": "512x512",
+            "type": "image/png",
+            "purpose": "any maskable"
+        }
+    ]
+}

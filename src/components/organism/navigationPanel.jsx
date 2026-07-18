@@ -1,8 +1,10 @@
 "use client";
 
 import { NAV_ITMES } from "@/constants/navigation";
+import usePWAInstall from "@/hooks/usePWAInstall";
 import { cn } from "@/lib/utils";
 import useDOCStore from "@/store";
+import { Download } from "lucide-react";
 import Link from "next/link";
 import Logo from "../atoms/logo";
 import UserAvatar from "../atoms/userAvatar";
@@ -10,6 +12,7 @@ import { Button } from "../ui/button";
 
 const NavigationPanel = ({ children }) => {
     const { user } = useDOCStore();
+    const { isInstallable, install } = usePWAInstall();
 
     return (
         <div className="flex min-h-0 w-full flex-1 flex-col md:rounded-md">
@@ -28,10 +31,23 @@ const NavigationPanel = ({ children }) => {
                             </span>
                         </span>
                     </div>
-                    <div className="flex w-fit h-full">
+                    <div className="flex w-fit h-full items-center gap-2">
+                        {isInstallable && (
+                            <button
+                                type="button"
+                                onClick={install}
+                                title="Install App"
+                                className="relative flex items-center gap-1.5 rounded-full bg-green-600 hover:bg-green-700 active:scale-95 text-white text-xs font-semibold px-3 py-1.5 shadow-md transition-all duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-green-400 focus-visible:ring-offset-2"
+                            >
+                                {/* Animated pulse ring */}
+                                <span className="absolute -inset-0.5 rounded-full animate-ping bg-green-400/40 pointer-events-none" />
+                                <Download className="size-3.5 shrink-0" />
+                                <span>Install</span>
+                            </button>
+                        )}
                         <Link
                             href="/profile"
-                            className="flex h-full items-center "
+                            className="flex h-full items-center"
                         >
                             <UserAvatar
                                 src={user?.image}
