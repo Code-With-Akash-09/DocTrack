@@ -22,7 +22,7 @@ const HomePage = () => {
     const { user: { uid } = null } = useDOCStore();
     const [selectedMonth, setSelectedMonth] = useState(() => new Date());
 
-    const { data, isLoading, isFetching, refetch } = useGetDashboard({
+    const { data } = useGetDashboard({
         uid,
         date: selectedMonth,
     });
