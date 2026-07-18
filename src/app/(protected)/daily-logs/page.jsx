@@ -52,7 +52,6 @@ const page = () => {
                     align="end"
                 />
             </div>
-            <div className="flex w-full shrink-0"></div>
             <div className="min-h-0 flex-1 w-full overflow-y-auto overflow-x-hidden hide-scrollbar">
                 {isLoading && isFetching ? (
                     <div className="w-full border border-neutral-200 rounded-md flex h-full min-h-0 flex-1 items-center justify-center">
