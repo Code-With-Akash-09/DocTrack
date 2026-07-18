@@ -209,15 +209,17 @@ export const getDashboard = async (uid, { date = new Date() } = {}) => {
                 ? Math.min(Math.round((totalVisits / totalTarget) * 100), 100)
                 : 0;
 
-        const enrichedTodayDoctors = todayDoctors.map((doctor) => ({
-            ...doctor,
-            ...(statsMap[doctor.doctorId] || {
-                monthlyVisits: 0,
-                pendingVisits: doctor.monthlyTarget,
-                extraVisits: 0,
-                progress: 0,
-            }),
-        }));
+        const enrichedTodayDoctors = todayDoctors
+            .map((doctor) => ({
+                ...doctor,
+                ...(statsMap[doctor.doctorId] || {
+                    monthlyVisits: 0,
+                    pendingVisits: doctor.monthlyTarget,
+                    extraVisits: 0,
+                    progress: 0,
+                }),
+            }))
+            .filter((doctor) => doctor.monthlyVisits < doctor.monthlyTarget);
 
         return {
             error: false,
