@@ -45,7 +45,14 @@ const VisitLogForm = ({
 
     const form = useForm({
         resolver: zodResolver(VISIT_SCHEMA),
-        defaultValues: initialValues || VISIT_DEFAULT_VALUES,
+        defaultValues: initialValues
+            ? {
+                  ...initialValues,
+                  visitDate: initialValues.visitDate
+                      ? new Date(initialValues.visitDate)
+                      : new Date(),
+              }
+            : VISIT_DEFAULT_VALUES,
     });
 
     const { mutate: addVisit, isPending: isPendingAddVisit } = useAddVisits({
@@ -277,7 +284,7 @@ const VisitLogForm = ({
 export default VisitLogForm;
 
 const VISIT_SCHEMA = z.object({
-    visitDate: z.date({
+    visitDate: z.coerce.date({
         required_error: "Visit date is required",
     }),
     comments: z
