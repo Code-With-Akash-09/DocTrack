@@ -16,10 +16,16 @@ const useAddVisits = ({ uid, doctorId }) => {
             return resp;
         },
         onSuccess: () => {
-            queryClient.invalidateQueries({ queryKey: ["getVisits", uid] });
+            queryClient.invalidateQueries({ queryKey: ["visits", uid] });
             queryClient.invalidateQueries({ queryKey: ["getDoctors", uid] });
             queryClient.invalidateQueries({
                 queryKey: ["getDoctorById", uid, doctorId],
+            });
+            queryClient.invalidateQueries({
+                queryKey: ["doctor-visits", uid, doctorId],
+            });
+            queryClient.invalidateQueries({
+                queryKey: ["dashboard", uid],
             });
         },
         onError: (error) => {

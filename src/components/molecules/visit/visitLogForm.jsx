@@ -57,10 +57,14 @@ const VisitLogForm = ({
 
     const { mutate: addVisit, isPending: isPendingAddVisit } = useAddVisits({
         uid: data.uid,
-        doctorId: data.doctorId,
+        doctorId: data?.doctorId || data?.doctor?.doctorId,
     });
     const { mutate: updateVisit, isPending: isPendingUpdateVisit } =
-        useUpdateVisits({ uid: data.uid, visitId: data.visitId });
+        useUpdateVisits({
+            uid: data.uid,
+            visitId: data.visitId,
+            doctorId: data?.doctorId || data?.doctor?.doctorId,
+        });
     const isSubmitting = isPendingAddVisit || isPendingUpdateVisit;
 
     const onSubmit = (values) => {
@@ -74,10 +78,21 @@ const VisitLogForm = ({
     };
 
     useEffect(() => {
-        if (!form.getValues("visitDate")) {
-            form.setValue("visitDate", new Date());
+        if (initialValues) {
+            form.reset({
+                ...VISIT_DEFAULT_VALUES,
+                ...initialValues,
+                visitDate: initialValues.visitDate
+                    ? new Date(initialValues.visitDate)
+                    : new Date(),
+            });
+        } else {
+            form.reset({
+                ...VISIT_DEFAULT_VALUES,
+                visitDate: new Date(),
+            });
         }
-    }, [form]);
+    }, [initialValues, form]);
 
     return (
         <Drawer open={open} onOpenChange={setOpen}>
