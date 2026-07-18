@@ -12,7 +12,7 @@ import { useEffect, useState } from "react";
 import { useInView } from "react-intersection-observer";
 import { useDebounce } from "use-debounce";
 
-const page = () => {
+const DoctorsPage = () => {
     const { user: { uid } = null } = useDOCStore();
     const { ref, inView } = useInView();
     const [search, setSearch] = useState("");
@@ -43,17 +43,21 @@ const page = () => {
 
     return (
         <div className="flex h-full flex-col min-h-0 gap-4 w-full flex-1 overflow-hidden p-4">
-            <div className="flex items-center justify-between w-full shrink-0">
+            <div className="flex items-start justify-between gap-4 w-full shrink-0">
                 <div className="h-fit">
-                    <h2 className="leading-none font-semibold">
-                        <span className="text-green-700">Doctors</span>{" "}
+                    <h2 className="leading-none text-2xl font-bold tracking-tight text-neutral-800">
+                        <span className="bg-linear-to-r from-green-600 to-green-800 bg-clip-text text-transparent">
+                            Doctors
+                        </span>{" "}
                         Directory
                     </h2>
-                    <span className="text-xs text-neutral-600">
+                    <p className="text-xs text-neutral-500 mt-1">
                         Total : {!isLoading ? pagination?.total || 0 : 0}
-                    </span>
+                    </p>
                 </div>
-                <DoctorForm />
+                <div className="flex w-fit">
+                    <DoctorForm />
+                </div>
             </div>
             <div className="flex w-full shrink-0">
                 <Label className="flex items-center w-full gap-2">
@@ -94,4 +98,4 @@ const page = () => {
     );
 };
 
-export default page;
+export default DoctorsPage;

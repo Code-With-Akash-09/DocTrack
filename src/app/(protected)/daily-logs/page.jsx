@@ -9,7 +9,7 @@ import { StethoscopeIcon } from "lucide-react";
 import { useEffect, useState } from "react";
 import { useInView } from "react-intersection-observer";
 
-const page = () => {
+const DailyLogsPage = () => {
     const { user: { uid } = null } = useDOCStore();
     const { ref, inView } = useInView();
     const [selectedMonth, setSelectedMonth] = useState(() => new Date());
@@ -37,20 +37,25 @@ const page = () => {
 
     return (
         <div className="flex h-full flex-col min-h-0 gap-4 w-full flex-1 overflow-hidden p-4">
-            <div className="grid grid-cols-2 gap-4 w-full shrink-0">
+            <div className="flex items-start justify-between gap-4 w-full shrink-0">
                 <div className="h-fit">
-                    <h2 className="leading-none font-semibold">
-                        <span className="text-green-700">Visit</span> Logs
+                    <h2 className="leading-none text-2xl font-bold tracking-tight text-neutral-800">
+                        <span className="bg-linear-to-r from-green-600 to-green-800 bg-clip-text text-transparent">
+                            Daily
+                        </span>{" "}
+                        Logs
                     </h2>
-                    <span className="text-xs text-neutral-600">
+                    <p className="text-xs text-neutral-500 mt-1">
                         Total : {!isLoading ? pagination?.total || 0 : 0}
-                    </span>
+                    </p>
                 </div>
-                <MonthPicker
-                    value={selectedMonth}
-                    onChange={setSelectedMonth}
-                    align="end"
-                />
+                <div className="flex w-fit">
+                    <MonthPicker
+                        value={selectedMonth}
+                        onChange={setSelectedMonth}
+                        align="end"
+                    />
+                </div>
             </div>
             <div className="min-h-0 flex-1 w-full overflow-y-auto overflow-x-hidden hide-scrollbar">
                 {isLoading && isFetching ? (
@@ -79,4 +84,4 @@ const page = () => {
     );
 };
 
-export default page;
+export default DailyLogsPage;
