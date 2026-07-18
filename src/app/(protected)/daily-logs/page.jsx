@@ -39,13 +39,13 @@ const DailyLogsPage = () => {
         <div className="flex h-full flex-col min-h-0 gap-4 w-full flex-1 overflow-hidden p-4">
             <div className="flex items-start justify-between gap-4 w-full shrink-0">
                 <div className="h-fit">
-                    <h2 className="leading-none text-2xl font-bold tracking-tight text-neutral-800">
+                    <h2 className="leading-none text-xl font-bold tracking-tight text-neutral-800">
                         <span className="bg-linear-to-r from-green-600 to-green-800 bg-clip-text text-transparent">
                             Daily
                         </span>{" "}
                         Logs
                     </h2>
-                    <p className="text-xs text-neutral-500 mt-1">
+                    <p className="text-[10px] text-neutral-500 mt-1">
                         Total : {!isLoading ? pagination?.total || 0 : 0}
                     </p>
                 </div>

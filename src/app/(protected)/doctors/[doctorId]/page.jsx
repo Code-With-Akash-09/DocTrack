@@ -42,13 +42,13 @@ const DoctorIdPage = () => {
                     <BackButton />
                 </div>
                 <div className="flex-1 h-fit">
-                    <h2 className="leading-none text-2xl font-bold tracking-tight text-neutral-800">
+                    <h2 className="leading-none text-xl font-bold tracking-tight text-neutral-800">
                         <span className="bg-linear-to-r from-green-600 to-green-800 bg-clip-text text-transparent">
                             Doctor
                         </span>{" "}
                         Details
                     </h2>
-                    <p className="text-xs text-neutral-500 mt-1">
+                    <p className="text-[10px] text-neutral-500 mt-1">
                         Back to List
                     </p>
                 </div>
@@ -60,10 +60,9 @@ const DoctorIdPage = () => {
             <Separator />
 
             <div className="flex-1 min-h-0 space-y-5 overflow-y-auto overflow-x-hidden hide-scrollbar w-full pb-6">
-                
                 <div className="flex relative w-full p-5 rounded-2xl border border-neutral-100 bg-linear-to-br from-white to-neutral-50/20 shadow-xs overflow-hidden">
                     <Stethoscope className="absolute -right-6 -bottom-6 size-32 text-neutral-100/50 select-none pointer-events-none" />
-                    
+
                     <div className="flex w-full flex-col gap-3 z-10">
                         <div className="flex flex-col gap-2">
                             <Badge
@@ -73,10 +72,16 @@ const DoctorIdPage = () => {
                                 {doctor.speciality[0]}
                             </Badge>
                             <div className="flex flex-col gap-1 min-w-0">
-                                <h3 className="font-bold leading-tight text-lg text-neutral-800 truncate" title={doctor.name}>
+                                <h3
+                                    className="font-bold leading-tight text-lg text-neutral-800 truncate"
+                                    title={doctor.name}
+                                >
                                     {doctor.name}
                                 </h3>
-                                <span className="text-xs text-neutral-500 truncate" title={doctor.hospital}>
+                                <span
+                                    className="text-xs text-neutral-500 truncate"
+                                    title={doctor.hospital}
+                                >
                                     {doctor.hospital || "General Practice"}
                                 </span>
                             </div>
@@ -97,7 +102,7 @@ const DoctorIdPage = () => {
                         )}
 
                         <Separator className="bg-neutral-100 mt-1" />
-                        
+
                         <div className="flex flex-wrap items-center justify-between gap-3 pt-1">
                             <Link
                                 href={`tel:+91${doctor.mobile}`}
@@ -111,11 +116,13 @@ const DoctorIdPage = () => {
                                 </span>
                             </Link>
 
-                            <div className={`flex items-center gap-1.5 px-3 py-1.5 rounded-xl border text-[10px] font-bold uppercase tracking-wider ${
-                                isTargetAchieved 
-                                    ? "bg-emerald-50/50 border-emerald-100 text-emerald-800" 
-                                    : "bg-amber-50/30 border-amber-100/50 text-amber-800"
-                            }`}>
+                            <div
+                                className={`flex items-center gap-1.5 px-3 py-1.5 rounded-xl border text-[10px] font-bold uppercase tracking-wider ${
+                                    isTargetAchieved
+                                        ? "bg-emerald-50/50 border-emerald-100 text-emerald-800"
+                                        : "bg-amber-50/30 border-amber-100/50 text-amber-800"
+                                }`}
+                            >
                                 Target: {doctor.monthlyTarget} visits / Month
                             </div>
                         </div>
@@ -135,7 +142,9 @@ const DoctorIdPage = () => {
                             <div className="flex flex-col text-xs font-bold text-neutral-800 min-w-0">
                                 <span className="truncate">
                                     {doctor.visitingDays
-                                        .map((day) => day.trim().substring(0, 3))
+                                        .map((day) =>
+                                            day.trim().substring(0, 3),
+                                        )
                                         .join(", ")}
                                 </span>
                                 <span className="text-[9px] text-neutral-400 font-normal mt-0.5">
@@ -149,7 +158,10 @@ const DoctorIdPage = () => {
                             </div>
                             <div className="flex flex-col text-xs font-bold text-neutral-800 min-w-0">
                                 <span className="truncate">
-                                    {formatTimeRange(doctor.startTime, doctor.endTime)}
+                                    {formatTimeRange(
+                                        doctor.startTime,
+                                        doctor.endTime,
+                                    )}
                                 </span>
                                 <span className="text-[9px] text-neutral-400 font-normal mt-0.5">
                                     Visiting Time
@@ -180,7 +192,8 @@ const DoctorIdPage = () => {
                         General Notes
                     </span>
                     <p className="text-xs text-neutral-600 leading-relaxed">
-                        {doctor.messages || "No notes available for this doctor."}
+                        {doctor.messages ||
+                            "No notes available for this doctor."}
                     </p>
                 </div>
                 <MonthlyDoctorVisitsAnalytics doctor={doctor} />
