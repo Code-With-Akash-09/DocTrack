@@ -11,10 +11,18 @@ const Page = () => {
     const [selectedMonth, setSelectedMonth] = useState(() => new Date());
     const { user: { uid } = null } = useDOCStore();
 
-    const { data: targets, isLoading } = useGetMonthlyTargets({
+    const {
+        data: targets,
+        isLoading,
+        hasNextPage,
+        fetchNextPage,
+        isFetchingNextPage,
+    } = useGetMonthlyTargets({
         uid,
         date: selectedMonth,
     });
+
+    const flatTargets = targets?.pages?.flatMap((page) => page.data) || [];
 
     return (
         <div className="flex h-full flex-col min-h-0 gap-4 w-full flex-1 overflow-hidden p-4">
@@ -41,9 +49,12 @@ const Page = () => {
 
             <div className="min-h-0 flex-1 w-full overflow-y-auto overflow-x-hidden hide-scrollbar space-y-6">
                 <MonthlyTargetsReportTable
-                    targets={targets}
+                    targets={flatTargets}
                     isLoading={isLoading}
                     selectedMonth={selectedMonth}
+                    hasNextPage={hasNextPage}
+                    fetchNextPage={fetchNextPage}
+                    isFetchingNextPage={isFetchingNextPage}
                 />
 
                 <ExcelExporterSuite uid={uid} selectedMonth={selectedMonth} />

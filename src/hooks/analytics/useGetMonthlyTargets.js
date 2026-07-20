@@ -1,16 +1,28 @@
 import { getMonthlyTargetsReport } from "@/actions/analytics";
-import { useQuery } from "@tanstack/react-query";
+import { useInfiniteQuery } from "@tanstack/react-query";
 
-const useGetMonthlyTargets = ({ uid, date }) => {
-    return useQuery({
-        queryKey: ["monthly-targets", uid, date ? date.toISOString().slice(0, 7) : ""],
+const useGetMonthlyTargets = ({ uid, date, limit = 15 }) => {
+    return useInfiniteQuery({
+        queryKey: [
+            "monthly-targets",
+            uid,
+            date ? date.toISOString().slice(0, 7) : "",
+        ],
         enabled: !!uid && !!date,
-        queryFn: async () => {
-            const resp = await getMonthlyTargetsReport(uid, date);
+        queryFn: async ({ pageParam = 1 }) => {
+            const resp = await getMonthlyTargetsReport(uid, date, {
+                page: pageParam,
+                limit,
+            });
             if (resp.error) {
                 throw new Error(resp.message);
             }
-            return resp.data;
+            return resp;
+        },
+        initialPageParam: 1,
+        getNextPageParam: (lastPage) => {
+            if (!lastPage.pagination?.hasNextPage) return undefined;
+            return lastPage.pagination.page + 1;
         },
     });
 };

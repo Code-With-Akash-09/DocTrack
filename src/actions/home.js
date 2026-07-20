@@ -103,7 +103,7 @@ export const getDashboard = async (uid, { date = new Date() } = {}) => {
                             },
                         },
                         {
-                            $limit: 10,
+                            $limit: 5,
                         },
                         {
                             $lookup: {
@@ -139,7 +139,7 @@ export const getDashboard = async (uid, { date = new Date() } = {}) => {
                         },
                     ])
                     .toArray(),
-
+ 
                 doctor_coll
                     .find({
                         uid,
@@ -161,6 +161,7 @@ export const getDashboard = async (uid, { date = new Date() } = {}) => {
                     .sort({
                         startTime: 1,
                     })
+                    .limit(5)
                     .toArray(),
             ]);
 

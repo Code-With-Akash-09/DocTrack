@@ -1,12 +1,29 @@
-"use client";
-
 import { format } from "date-fns";
 import { BarChart3 } from "lucide-react";
+import { useEffect } from "react";
+import { useInView } from "react-intersection-observer";
 
-const MonthlyTargetsReportTable = ({ targets, isLoading, selectedMonth }) => {
+const MonthlyTargetsReportTable = ({
+    targets,
+    isLoading,
+    selectedMonth,
+    hasNextPage,
+    fetchNextPage,
+    isFetchingNextPage,
+}) => {
+    const { ref, inView } = useInView({
+        threshold: 0,
+    });
+
+    useEffect(() => {
+        if (inView && hasNextPage && !isFetchingNextPage) {
+            fetchNextPage();
+        }
+    }, [inView, hasNextPage, isFetchingNextPage, fetchNextPage]);
+
     return (
-        <div className="w-full bg-white border border-neutral-100 rounded-2xl shadow-xs overflow-hidden">
-            <div className="p-5 border-b border-neutral-50 flex items-center justify-between">
+        <div className="w-full bg-white border border-neutral-100 rounded-2xl shadow-xs overflow-hidden max-h-96 flex flex-col">
+            <div className="p-5 border-b border-neutral-50 flex items-center justify-between shrink-0">
                 <div className="flex items-center gap-2.5 min-w-0">
                     <div className="p-2 rounded-lg bg-green-50 text-green-700 shrink-0">
                         <BarChart3 className="size-5" />
@@ -25,7 +42,7 @@ const MonthlyTargetsReportTable = ({ targets, isLoading, selectedMonth }) => {
                 </span>
             </div>
 
-            <div className="w-full overflow-hidden">
+            <div className="w-full overflow-y-auto overflow-x-hidden hide-scrollbar flex-1">
                 <table className="w-full text-left border-collapse table-fixed">
                     <thead>
                         <tr className="border-b border-neutral-100 bg-neutral-50/50 text-[10px] font-bold text-neutral-400 uppercase tracking-wider">
@@ -45,16 +62,16 @@ const MonthlyTargetsReportTable = ({ targets, isLoading, selectedMonth }) => {
                         {isLoading ? (
                             [...Array(3)].map((_, i) => (
                                 <tr key={i} className="animate-pulse">
-                                    <td className="-4">
+                                    <td className="p-4">
                                         <div className="h-4 bg-neutral-100 rounded-sm w-3/4"></div>
                                     </td>
-                                    <td className="-4">
+                                    <td className="p-4">
                                         <div className="h-4 bg-neutral-100 rounded-sm w-6 mx-auto"></div>
                                     </td>
-                                    <td className="-4">
+                                    <td className="p-4">
                                         <div className="h-4 bg-neutral-100 rounded-sm w-6 mx-auto"></div>
                                     </td>
-                                    <td className="-4">
+                                    <td className="p-4">
                                         <div className="h-4 bg-neutral-100 rounded-sm w-6 mx-auto"></div>
                                     </td>
                                 </tr>
@@ -105,6 +122,19 @@ const MonthlyTargetsReportTable = ({ targets, isLoading, selectedMonth }) => {
                         )}
                     </tbody>
                 </table>
+                {/* Infinite Scroll Sentinel */}
+                {hasNextPage && (
+                    <div
+                        ref={ref}
+                        className="py-4 flex justify-center text-xs text-neutral-400 border-t border-neutral-50"
+                    >
+                        {isFetchingNextPage ? (
+                            <div className="animate-spin rounded-full h-4 w-4 border-2 border-green-700 border-t-transparent" />
+                        ) : (
+                            "Scroll to load more"
+                        )}
+                    </div>
+                )}
             </div>
         </div>
     );

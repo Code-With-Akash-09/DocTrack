@@ -7,6 +7,7 @@ import DoctorForm from "@/components/molecules/doctors/doctorForm";
 import MonthlyDoctorVisitsAnalytics from "@/components/molecules/doctors/monthlyDoctorVisitsAnalytics";
 import { Separator } from "@/components/ui/separator";
 import { Spinner } from "@/components/ui/spinner";
+import { SPECIALITY_ICONS } from "@/constants/doctor";
 import useGetDoctorById from "@/hooks/doctors/useGetDoctorById";
 import { formatTimeRange } from "@/lib/utils";
 import useDOCStore from "@/store";
@@ -33,6 +34,7 @@ const DoctorIdPage = () => {
         );
     }
 
+    const Icon = SPECIALITY_ICONS[doctor?.speciality[0]] ?? Stethoscope;
     const isTargetAchieved = doctor?.monthlyVisits >= doctor?.monthlyTarget;
 
     return (
@@ -61,7 +63,7 @@ const DoctorIdPage = () => {
 
             <div className="flex-1 min-h-0 space-y-5 overflow-y-auto overflow-x-hidden hide-scrollbar w-full pb-6">
                 <div className="flex relative w-full p-5 rounded-2xl border border-neutral-100 bg-linear-to-br from-white to-neutral-50/20 shadow-xs overflow-hidden">
-                    <Stethoscope className="absolute -right-6 -bottom-6 size-32 text-neutral-100/50 select-none pointer-events-none" />
+                    <Icon className="absolute -right-6 -top-6 size-32 text-neutral-100/90 select-none pointer-events-none" />
 
                     <div className="flex w-full flex-col gap-3 z-10">
                         <div className="flex flex-col gap-2">
@@ -141,11 +143,11 @@ const DoctorIdPage = () => {
                             </div>
                             <div className="flex flex-col text-xs font-bold text-neutral-800 min-w-0">
                                 <span className="truncate">
-                                    {doctor.visitingDays
+                                    {doctor?.visitingDays
                                         .map((day) =>
                                             day.trim().substring(0, 3),
                                         )
-                                        .join(", ")}
+                                        .join(", ") || "-"}
                                 </span>
                                 <span className="text-[9px] text-neutral-400 font-normal mt-0.5">
                                     Visiting Days

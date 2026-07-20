@@ -1,5 +1,5 @@
-import LoginModal from "@/components/molecules/loginModel";
 import ServiceWorkerRegistrar from "@/components/atoms/serviceWorkerRegistrar";
+import LoginModal from "@/components/molecules/loginModel";
 import { Toaster } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import AuthProvider from "@/providers/authProvider";
@@ -55,7 +55,7 @@ export default function RootLayout({ children }) {
             className={`${inter.variable} ${geistSans.variable} ${geistMono.variable} font-inter h-dvh w-full antialiased overflow-hidden`}
             suppressHydrationWarning
         >
-            <body className="flex h-full w-full bg-neutral-50 md:py-4 max-w-md mx-auto dark:bg-neutral-900 overflow-hidden">
+            <body className="flex h-full w-full bg-white md:py-4 max-w-md mx-auto dark:bg-neutral-900 overflow-hidden">
                 <QueryClientProvider>
                     <TooltipProvider>
                         <ThemeProvider

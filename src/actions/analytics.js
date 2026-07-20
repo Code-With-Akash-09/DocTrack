@@ -3,60 +3,69 @@
 import { doctorscoll, visitcoll } from "@/db/mongodb/collection";
 import { endOfMonth, startOfMonth } from "date-fns";
 
-export const getMonthlyTargetsReport = async (uid, date) => {
+export const getMonthlyTargetsReport = async (uid, date, { page = 1, limit = 0 } = {}) => {
     try {
         const doctor_coll = await doctorscoll();
 
         const startDate = startOfMonth(new Date(date));
         const endDate = endOfMonth(new Date(date));
 
-        const report = await doctor_coll
-            .aggregate([
-                {
-                    $match: {
-                        uid,
-                        status: "active",
-                    },
+        const pipeline = [
+            {
+                $match: {
+                    uid,
+                    status: "active",
                 },
-                {
-                    $lookup: {
-                        from: "visits",
-                        let: {
-                            doctorId: "$doctorId",
-                            uid: "$uid",
-                        },
-                        pipeline: [
-                            {
-                                $match: {
-                                    $expr: {
-                                        $and: [
-                                            { $eq: ["$doctorId", "$$doctorId"] },
-                                            { $eq: ["$uid", "$$uid"] },
-                                            { $gte: ["$visitDate", startDate] },
-                                            { $lte: ["$visitDate", endDate] },
-                                        ],
-                                    },
+            },
+            {
+                $sort: { name: 1 },
+            },
+        ];
+
+        if (limit > 0) {
+            const skip = (page - 1) * limit;
+            pipeline.push({ $skip: skip });
+            pipeline.push({ $limit: limit });
+        }
+
+        pipeline.push(
+            {
+                $lookup: {
+                    from: "visits",
+                    let: {
+                        doctorId: "$doctorId",
+                        uid: "$uid",
+                    },
+                    pipeline: [
+                        {
+                            $match: {
+                                $expr: {
+                                    $and: [
+                                        { $eq: ["$doctorId", "$$doctorId"] },
+                                        { $eq: ["$uid", "$$uid"] },
+                                        { $gte: ["$visitDate", startDate] },
+                                        { $lte: ["$visitDate", endDate] },
+                                    ],
                                 },
                             },
-                        ],
-                        as: "visits",
-                    },
+                        },
+                    ],
+                    as: "visits",
                 },
-                {
-                    $project: {
-                        _id: 0,
-                        doctorId: 1,
-                        name: 1,
-                        speciality: 1,
-                        monthlyTarget: 1,
-                        done: { $size: "$visits" },
-                    },
+            },
+            {
+                $project: {
+                    _id: 0,
+                    doctorId: 1,
+                    name: 1,
+                    speciality: 1,
+                    monthlyTarget: 1,
+                    done: { $size: "$visits" },
                 },
-                {
-                    $sort: { name: 1 },
-                },
-            ])
-            .toArray();
+            }
+        );
+
+        const report = await doctor_coll.aggregate(pipeline).toArray();
 
         const data = report.map((doc) => ({
             ...doc,
@@ -66,6 +75,11 @@ export const getMonthlyTargetsReport = async (uid, date) => {
         return {
             error: false,
             data,
+            pagination: {
+                page,
+                limit,
+                hasNextPage: limit > 0 ? data.length === limit : false,
+            },
             message: "Monthly targets report fetched successfully",
         };
     } catch (error) {

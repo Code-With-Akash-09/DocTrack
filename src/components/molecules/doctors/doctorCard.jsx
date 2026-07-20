@@ -73,9 +73,9 @@ const DoctorCard = ({ card }) => {
                     </div>
                     <div className="flex flex-col text-[10px] font-bold text-neutral-800 min-w-0">
                         <span className="truncate">
-                            {card.visitingDays
-                                .map((day) => day.trim().substring(0, 3))
-                                .join(", ")}
+                            {card?.visitingDays
+                                ?.map((day) => day.trim().substring(0, 3))
+                                .join(", ") || "-"}
                         </span>
                         <span className="text-[9px] text-neutral-400 font-normal mt-0.5">
                             Visiting Days

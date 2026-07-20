@@ -33,7 +33,7 @@ export default function AuthProvider({ children }) {
 
     if (loading) {
         return (
-            <div className="flex items-center justify-center bg-neutral-50 dark:bg-neutral-800 flex-1 w-full">
+            <div className="flex items-center justify-center bg-white dark:bg-neutral-800 flex-1 w-full">
                 <Spinner className="size-6 text-green-700" />
             </div>
         );

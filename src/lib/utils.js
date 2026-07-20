@@ -16,6 +16,7 @@ export function getGoogleProfileImage(url, size = 512) {
 }
 
 export const formatTimeRange = (startTime, endTime) => {
+    if (!startTime || !endTime) return "-";
     const start = parse(startTime, "HH:mm", new Date());
     const end = parse(endTime, "HH:mm", new Date());
 

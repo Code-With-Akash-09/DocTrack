@@ -542,7 +542,7 @@ const DoctorForm = ({ initialValues = null, icon = false }) => {
                                             htmlFor="endTime"
                                             className="uppercase text-xs! text-neutral-700"
                                         >
-                                            Start Time
+                                            End Time
                                         </FieldLabel>
                                         <Input
                                             {...field}

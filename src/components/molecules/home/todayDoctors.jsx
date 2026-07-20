@@ -2,7 +2,7 @@
 
 import Badge from "@/components/atoms/badge";
 import VisitLogForm from "@/components/molecules/visit/visitLogForm";
-import { Clock3, CalendarDays } from "lucide-react";
+import { CalendarDays, Clock3 } from "lucide-react";
 
 const TodayDoctors = ({ todayDoctors = [] }) => {
     return (
@@ -17,14 +17,17 @@ const TodayDoctors = ({ todayDoctors = [] }) => {
                     todayDoctors.map((doctor) => (
                         <div
                             key={doctor.doctorId}
-                            className="flex flex-col w-full rounded-2xl p-4 gap-2.5 bg-gradient-to-br from-green-50/50 to-emerald-50/30 border border-green-100/70 hover:shadow-xs transition-all"
+                            className="flex flex-col w-full rounded-2xl p-4 gap-2.5 bg-linear-to-br from-green-50/50 to-emerald-50/30 border border-green-100/70 hover:shadow-xs transition-all"
                         >
                             <div className="flex items-center justify-between gap-2">
                                 <Badge
                                     variant={"green"}
-                                    className={"w-fit text-[9px] font-bold uppercase tracking-wider"}
+                                    className={
+                                        "w-fit text-[9px] font-bold uppercase tracking-wider"
+                                    }
                                 >
-                                    {doctor.monthlyVisits} / {doctor.monthlyTarget} Visits Done
+                                    {doctor.monthlyVisits} /{" "}
+                                    {doctor.monthlyTarget} Visits Done
                                 </Badge>
                                 <span className="flex items-center text-[10px] font-medium text-green-700 bg-green-100/50 px-2 py-0.5 rounded-md gap-1">
                                     <Clock3 className="size-3" />
@@ -33,14 +36,15 @@ const TodayDoctors = ({ todayDoctors = [] }) => {
                             </div>
                             <div className="flex w-full gap-4 items-center justify-between">
                                 <div className="flex flex-col min-w-0">
-                                    <span 
+                                    <span
                                         className="text-sm font-bold text-neutral-800 truncate"
                                         title={doctor.name}
                                     >
                                         {doctor.name}
                                     </span>
                                     <span className="text-[10px] text-neutral-400 mt-0.5 truncate">
-                                        {doctor.speciality?.join(", ") || "General Practice"}
+                                        {doctor.speciality?.join(", ") ||
+                                            "General Practice"}
                                     </span>
                                 </div>
                                 <VisitLogForm
