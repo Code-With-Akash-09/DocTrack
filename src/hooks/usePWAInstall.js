@@ -72,14 +72,20 @@ const usePWAInstall = () => {
 
     // Trigger native prompt (Android / Desktop)
     const install = async () => {
-        if (!deferredPrompt) return;
-        deferredPrompt.prompt();
-        const { outcome } = await deferredPrompt.userChoice;
-        if (outcome === "accepted") {
-            setIsInstalled(true);
-            setIsInstallable(false);
+        if (!deferredPrompt) return false;
+        try {
+            deferredPrompt.prompt();
+            const { outcome } = await deferredPrompt.userChoice;
+            if (outcome === "accepted") {
+                setIsInstalled(true);
+                setIsInstallable(false);
+            }
+            setDeferredPrompt(null);
+            return true;
+        } catch (err) {
+            console.error("Error triggering install prompt:", err);
+            return false;
         }
-        setDeferredPrompt(null);
     };
 
     // Dismiss iOS banner and remember it for the session

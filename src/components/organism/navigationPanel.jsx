@@ -9,75 +9,19 @@ import Image from "next/image";
 import Link from "next/link";
 import Logo from "../atoms/logo";
 import UserAvatar from "../atoms/userAvatar";
+import { toast } from "sonner";
 import { Button } from "../ui/button";
-
-const IOSInstallBanner = ({ isIOSSafari, onDismiss }) => (
-    <div className="relative z-50 w-full bg-linear-to-r from-green-600 to-teal-600 text-white px-4 py-3 flex items-start gap-3 shadow-lg animate-in slide-in-from-top duration-300">
-        <div className="shrink-0 mt-0.5">
-            <Image
-                src="/logo.png"
-                alt="DocTrack"
-                fill
-                className="size-10 rounded-xl border-2 border-white/30 shadow-sm"
-            />
-        </div>
-
-        <div className="flex-1 min-w-0">
-            <p className="font-bold text-sm leading-snug">
-                Install Doctor Visit Tracker
-            </p>
-            {isIOSSafari ? (
-                <p className="text-xs text-white/85 mt-0.5 leading-snug">
-                    Tap{" "}
-                    <span className="inline-flex items-center gap-0.5 font-semibold bg-white/20 rounded px-1 py-0.5">
-                        <Share className="size-3" />
-                        Share
-                    </span>{" "}
-                    then{" "}
-                    <span className="font-semibold">
-                        &ldquo;Add to Home Screen&rdquo;
-                    </span>
-                </p>
-            ) : (
-                <p className="text-xs text-white/85 mt-0.5 leading-snug">
-                    Open this page in{" "}
-                    <span className="font-semibold">Safari</span> to install the
-                    app on your iPhone
-                </p>
-            )}
-        </div>
-
-        <button
-            type="button"
-            onClick={onDismiss}
-            aria-label="Dismiss install banner"
-            className="shrink-0 mt-0.5 p-1 rounded-full hover:bg-white/20 transition-colors"
-        >
-            <X className="size-4" />
-        </button>
-    </div>
-);
 
 const NavigationPanel = ({ children }) => {
     const { user } = useDOCStore();
     const {
         isInstallable,
         install,
-        isIOS,
-        isIOSSafari,
-        showIOSBanner,
-        dismissIOSBanner,
+        isInstalled,
     } = usePWAInstall();
 
     return (
-        <div className="flex min-h-0 w-full flex-1 flex-col md:rounded-md">
-            {isIOS && showIOSBanner && (
-                <IOSInstallBanner
-                    isIOSSafari={isIOSSafari}
-                    onDismiss={dismissIOSBanner}
-                />
-            )}
-
+        <div className="flex min-h-0 w-full flex-1 flex-col md:rounded-md relative">
             <div className="flex relative w-full shrink-0 h-16 md:rounded-t-md overflow-hidden">
                 <div className="flex w-full h-full absolute z-0 bg-linear-to-r from-green-300/30 via-teal-300/30 to-blue-400/30 backdrop-blur-sm" />
                 <div className="z-10 flex h-full items-center justify-between w-full px-4 py-2 backdrop-blur-sm">
@@ -95,37 +39,6 @@ const NavigationPanel = ({ children }) => {
                     </div>
 
                     <div className="flex w-fit h-full items-center gap-2">
-                        {isInstallable && (
-                            <button
-                                type="button"
-                                onClick={install}
-                                title="Install App"
-                                className="relative flex items-center gap-1.5 rounded-full bg-green-600 hover:bg-green-700 active:scale-95 text-white text-xs font-semibold px-3 py-1.5 shadow-md transition-all duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-green-400 focus-visible:ring-offset-2"
-                            >
-                                <span className="absolute -inset-0.5 rounded-full animate-ping bg-green-400/40 pointer-events-none" />
-                                <Download className="size-3.5 shrink-0" />
-                                <span>Install</span>
-                            </button>
-                        )}
-
-                        {isIOS && !showIOSBanner && (
-                            <button
-                                type="button"
-                                onClick={() => {
-                                    sessionStorage.removeItem(
-                                        "pwa-ios-banner-dismissed",
-                                    );
-                                    window.location.reload();
-                                }}
-                                title="Install App"
-                                className="relative flex items-center gap-1.5 rounded-full bg-green-600 hover:bg-green-700 active:scale-95 text-white text-xs font-semibold px-3 py-1.5 shadow-md transition-all duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-green-400 focus-visible:ring-offset-2"
-                            >
-                                <span className="absolute -inset-0.5 rounded-full animate-ping bg-green-400/40 pointer-events-none" />
-                                <Download className="size-3.5 shrink-0" />
-                                <span>Install</span>
-                            </button>
-                        )}
-
                         <Link
                             href="/profile"
                             className="flex h-full items-center"
@@ -170,6 +83,25 @@ const NavigationPanel = ({ children }) => {
                     </Button>
                 ))}
             </div>
+
+            {!isInstalled && (
+                <button
+                    type="button"
+                    onClick={async () => {
+                        const success = await install();
+                        if (!success) {
+                            toast.info(
+                                "Tap your browser's menu (Share / Menu) and select 'Add to Home Screen' or 'Install' to install directly.",
+                            );
+                        }
+                    }}
+                    title="Install App"
+                    className="absolute bottom-20 right-4 z-50 flex items-center justify-center size-12 rounded-full bg-green-600 hover:bg-green-700 active:scale-95 text-white shadow-lg transition-all duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-green-400 focus-visible:ring-offset-2 hover:shadow-xl cursor-pointer"
+                >
+                    <span className="absolute -inset-1 rounded-full animate-ping bg-green-400/45 pointer-events-none" />
+                    <Download className="size-6 shrink-0" />
+                </button>
+            )}
         </div>
     );
 };
